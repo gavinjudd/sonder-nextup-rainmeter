@@ -1,0 +1,128 @@
+﻿[START] gcal_fetch.ps1
+[2025-10-02 14:24:11] Window: 2025-10-02 14:24 -> 2025-10-09 14:24 (Local TZ: Eastern Standard Time)
+[2025-10-02 14:24:12] Fetched ICS successfully (length: 103427 chars)
+[2025-10-02 14:24:12] Unfolded 2007 raw lines to 1329 logical lines
+[2025-10-02 14:24:12] UTC conversion: 20220926T140000Z -> UTC: 2022-09-26 14:00 -> Local: 2022-09-26 10:00
+[2025-10-02 14:24:12] Parsed event: 2022-09-26 10:00 | timed | UTC Z | Brandon Thompson
+[2025-10-02 14:24:12] UTC conversion: 20230117T160000Z -> UTC: 2023-01-17 16:00 -> Local: 2023-01-17 11:00
+[2025-10-02 14:24:12] Parsed event: 2023-01-17 11:00 | timed | UTC Z | Brandon Thompson GUE-MALD
+[2025-10-02 14:24:12] UTC conversion: 20231103T210000Z -> UTC: 2023-11-03 21:00 -> Local: 2023-11-03 17:00
+[2025-10-02 14:24:12] Parsed event: 2023-11-03 17:00 | timed | UTC Z | Gavin Judd (Bootcamp Interview)
+[2025-10-02 14:24:12] TZID conversion: 20231201T130000 TZID=America/Los_Angeles -> 2023-12-01 16:00 local
+[2025-10-02 14:24:12] Parsed event: 2023-12-01 16:00 | timed | TZID:America/Los_Angeles | Gavin / Alfredo Conectado
+[2025-10-02 14:24:12] UTC conversion: 20240424T021000Z -> UTC: 2024-04-24 02:10 -> Local: 2024-04-23 22:10
+[2025-10-02 14:24:12] Parsed event: 2024-04-23 22:10 | timed | UTC Z | Conectado Platform Test
+[2025-10-02 14:24:12] UTC conversion: 20231118T170000Z -> UTC: 2023-11-18 17:00 -> Local: 2023-11-18 12:00
+[2025-10-02 14:24:12] Parsed event: 2023-11-18 12:00 | timed | UTC Z | Fall 2023 Bioinformatics Bootcamp Launch Event 🚀
+[2025-10-02 14:24:12] TZID conversion: 20240426T150000 TZID=America/Los_Angeles -> 2024-04-26 18:00 local
+[2025-10-02 14:24:12] Parsed event: 2024-04-26 18:00 | timed | TZID:America/Los_Angeles | Conectado Test Run + I2G Team Meeting
+[2025-10-02 14:24:12] UTC conversion: 20240203T183000Z -> UTC: 2024-02-03 18:30 -> Local: 2024-02-03 13:30
+[2025-10-02 14:24:12] Parsed event: 2024-02-03 13:30 | timed | UTC Z | Bioinformatics Bootcamp Graduation Ceremony - Friday Cohort
+[2025-10-02 14:24:12] UTC conversion: 20240419T230000Z -> UTC: 2024-04-19 23:00 -> Local: 2024-04-19 19:00
+[2025-10-02 14:24:12] Parsed event: 2024-04-19 19:00 | timed | UTC Z | Conectado Platform Test Run
+[2025-10-02 14:24:12] UTC conversion: 20250524T180000Z -> UTC: 2025-05-24 18:00 -> Local: 2025-05-24 14:00
+[2025-10-02 14:24:12] Parsed event: 2025-05-24 14:00 | timed | UTC Z | Video Call w/Adam @ KSA (Gavin Judd)
+[2025-10-02 14:24:12] UTC conversion: 20250528T170000Z -> UTC: 2025-05-28 17:00 -> Local: 2025-05-28 13:00
+[2025-10-02 14:24:12] Parsed event: 2025-05-28 13:00 | timed | UTC Z | ZeroDay Eval Meet
+[2025-10-02 14:24:12] UTC conversion: 20250617T160000Z -> UTC: 2025-06-17 16:00 -> Local: 2025-06-17 12:00
+[2025-10-02 14:24:12] Parsed event: 2025-06-17 12:00 | timed | UTC Z | Angela x Gavin Lunch Metro Diner
+[2025-10-02 14:24:12] UTC conversion: 20250609T170000Z -> UTC: 2025-06-09 17:00 -> Local: 2025-06-09 13:00
+[2025-10-02 14:24:12] Parsed event: 2025-06-09 13:00 | timed | UTC Z | Fletcher Companies Website Review
+[2025-10-02 14:24:12] UTC conversion: 20250602T190000Z -> UTC: 2025-06-02 19:00 -> Local: 2025-06-02 15:00
+[2025-10-02 14:24:12] Parsed event: 2025-06-02 15:00 | timed | UTC Z | ZeroDay Role Eval
+[2025-10-02 14:24:12] UTC conversion: 20250626T170000Z -> UTC: 2025-06-26 17:00 -> Local: 2025-06-26 13:00
+[2025-10-02 14:24:12] Parsed event: 2025-06-26 13:00 | timed | UTC Z | Fletcher Companies Website  Review
+[2025-10-02 14:24:12] UTC conversion: 20250714T180000Z -> UTC: 2025-07-14 18:00 -> Local: 2025-07-14 14:00
+[2025-10-02 14:24:12] Parsed event: 2025-07-14 14:00 | timed | UTC Z | Eli Newman and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250717T140000Z -> UTC: 2025-07-17 14:00 -> Local: 2025-07-17 10:00
+[2025-10-02 14:24:12] Parsed event: 2025-07-17 10:00 | timed | UTC Z | Link Clark and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250717T163000Z -> UTC: 2025-07-17 16:30 -> Local: 2025-07-17 12:30
+[2025-10-02 14:24:12] Parsed event: 2025-07-17 12:30 | timed | UTC Z | Gavin Judd Updates
+[2025-10-02 14:24:12] UTC conversion: 20250807T210000Z -> UTC: 2025-08-07 21:00 -> Local: 2025-08-07 17:00
+[2025-10-02 14:24:12] Parsed event: 2025-08-07 17:00 | timed | UTC Z | Guy and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250808T190000Z -> UTC: 2025-08-08 19:00 -> Local: 2025-08-08 15:00
+[2025-10-02 14:24:12] Parsed event: 2025-08-08 15:00 | timed | UTC Z | Andy and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250811T210000Z -> UTC: 2025-08-11 21:00 -> Local: 2025-08-11 17:00
+[2025-10-02 14:24:12] Parsed event: 2025-08-11 17:00 | timed | UTC Z | Guy and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250821T153000Z -> UTC: 2025-08-21 15:30 -> Local: 2025-08-21 11:30
+[2025-10-02 14:24:12] Parsed event: 2025-08-21 11:30 | timed | UTC Z | James and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250820T010000Z -> UTC: 2025-08-20 01:00 -> Local: 2025-08-19 21:00
+[2025-10-02 14:24:12] Parsed event: 2025-08-19 21:00 | timed | UTC Z | Reservation at Spurrier's Gridiron Grille
+[2025-10-02 14:24:12] UTC conversion: 20250827T220000Z -> UTC: 2025-08-27 22:00 -> Local: 2025-08-27 18:00
+[2025-10-02 14:24:12] Parsed event: 2025-08-27 18:00 | timed | UTC Z | SFIT update
+[2025-10-02 14:24:12] UTC conversion: 20250901T160000Z -> UTC: 2025-09-01 16:00 -> Local: 2025-09-01 12:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-01 12:00 | timed | UTC Z | Gavin x Quan Blount Meet
+[2025-10-02 14:24:12] UTC conversion: 20250829T183000Z -> UTC: 2025-08-29 18:30 -> Local: 2025-08-29 14:30
+[2025-10-02 14:24:12] Parsed event: 2025-08-29 14:30 | timed | UTC Z | Gavin <> Quang
+[2025-10-02 14:24:12] UTC conversion: 20250829T163000Z -> UTC: 2025-08-29 16:30 -> Local: 2025-08-29 12:30
+[2025-10-02 14:24:12] Parsed event: 2025-08-29 12:30 | timed | UTC Z | Alignment meet
+[2025-10-02 14:24:12] UTC conversion: 20250829T174500Z -> UTC: 2025-08-29 17:45 -> Local: 2025-08-29 13:45
+[2025-10-02 14:24:12] Parsed event: 2025-08-29 13:45 | timed | UTC Z | Officer meet
+[2025-10-02 14:24:12] UTC conversion: 20250829T220000Z -> UTC: 2025-08-29 22:00 -> Local: 2025-08-29 18:00
+[2025-10-02 14:24:12] Parsed event: 2025-08-29 18:00 | timed | UTC Z | Officer meet
+[2025-10-02 14:24:12] UTC conversion: 20250903T230000Z -> UTC: 2025-09-03 23:00 -> Local: 2025-09-03 19:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-03 19:00 | timed | UTC Z | Christopher and Gavin Judd
+[2025-10-02 14:24:12] TZID conversion: 20250822T110000 TZID=America/Detroit -> 2025-08-22 11:00 local
+[2025-10-02 14:24:12] Parsed event: 2025-08-22 11:00 | timed | TZID:America/Detroit | The Founders' Group | Guardrails: Building Compliant Products from Day One w/ Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250904T173000Z -> UTC: 2025-09-04 17:30 -> Local: 2025-09-04 13:30
+[2025-10-02 14:24:12] Parsed event: 2025-09-04 13:30 | timed | UTC Z | Ritsa and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250908T213000Z -> UTC: 2025-09-08 21:30 -> Local: 2025-09-08 17:30
+[2025-10-02 14:24:12] Parsed event: 2025-09-08 17:30 | timed | UTC Z | Chris and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250910T230000Z -> UTC: 2025-09-10 23:00 -> Local: 2025-09-10 19:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-10 19:00 | timed | UTC Z | Officer debrief
+[2025-10-02 14:24:12] TZID conversion: 20250717T123000 TZID=America/New_York -> 2025-07-17 12:30 local
+[2025-10-02 14:24:12] Parsed event: 2025-07-17 12:30 | timed | TZID:America/New_York | Cyber Ranges x Gavin Judd Updates
+[2025-10-02 14:24:12] UTC conversion: 20250916T193000Z -> UTC: 2025-09-16 19:30 -> Local: 2025-09-16 15:30
+[2025-10-02 14:24:12] Parsed event: 2025-09-16 15:30 | timed | UTC Z | Emerging Tech and Gavin Judd
+[2025-10-02 14:24:12] TZID conversion: 20250915T200000 TZID=America/New_York -> 2025-09-15 20:00 local
+[2025-10-02 14:24:12] Parsed event: 2025-09-15 20:00 | timed | TZID:America/New_York | Promptsuite meet
+[2025-10-02 14:24:12] UTC conversion: 20250922T170000Z -> UTC: 2025-09-22 17:00 -> Local: 2025-09-22 13:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-22 13:00 | timed | UTC Z | David Pearce and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250919T180000Z -> UTC: 2025-09-19 18:00 -> Local: 2025-09-19 14:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-19 14:00 | timed | UTC Z | James meet
+[2025-10-02 14:24:12] UTC conversion: 20250922T190000Z -> UTC: 2025-09-22 19:00 -> Local: 2025-09-22 15:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-22 15:00 | timed | UTC Z | Carlos Rinaldi and Gavin Judd
+[2025-10-02 14:24:12] UTC conversion: 20250922T140000Z -> UTC: 2025-09-22 14:00 -> Local: 2025-09-22 10:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-22 10:00 | timed | UTC Z | Campbell classroom slot DB209
+[2025-10-02 14:24:12] TZID conversion: 20250826T100000 TZID=America/New_York -> 2025-08-26 10:00 local
+[2025-10-02 14:24:12] Parsed event: 2025-08-26 10:00 | timed | TZID:America/New_York | MUL1010 P161
+[2025-10-02 14:24:12] UTC conversion: 20250923T170000Z -> UTC: 2025-09-23 17:00 -> Local: 2025-09-23 13:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-23 13:00 | timed | UTC Z | Campbell classroom slot DB204
+[2025-10-02 14:24:12] UTC conversion: 20250923T200000Z -> UTC: 2025-09-23 20:00 -> Local: 2025-09-23 16:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-23 16:00 | timed | UTC Z | Campbell classroom slot DB218
+[2025-10-02 14:24:12] UTC conversion: 20250924T200000Z -> UTC: 2025-09-24 20:00 -> Local: 2025-09-24 16:00
+[2025-10-02 14:24:12] Parsed event: 2025-09-24 16:00 | timed | UTC Z | Senate SOOT
+[2025-10-02 14:24:12] TZID conversion: 20250826T110000 TZID=America/New_York -> 2025-08-26 11:00 local
+[2025-10-02 14:24:12] Parsed event: 2025-08-26 11:00 | timed | TZID:America/New_York | ECO2023 AD133
+[2025-10-02 14:24:12] TZID conversion: 20250514T160000 TZID=America/New_York -> 2025-05-14 16:00 local
+[2025-10-02 14:24:12] Parsed event: 2025-05-14 16:00 | timed | TZID:America/New_York | Senate
+[2025-10-02 14:24:12] UTC conversion: 20250925T213000Z -> UTC: 2025-09-25 21:30 -> Local: 2025-09-25 17:30
+[2025-10-02 14:24:12] Parsed event: 2025-09-25 17:30 | timed | UTC Z | Keith Nelson Speak DB-216
+[2025-10-02 14:24:12] TZID conversion: 20250828T123000 TZID=America/New_York -> 2025-08-28 12:30 local
+[2025-10-02 14:24:12] Parsed event: 2025-08-28 12:30 | timed | TZID:America/New_York | Cyber Ranges x Gavin Judd Updates
+[2025-10-02 14:24:13] UTC conversion: 20251013T150000Z -> UTC: 2025-10-13 15:00 -> Local: 2025-10-13 11:00
+[2025-10-02 14:24:13] Parsed event: 2025-10-13 11:00 | timed | UTC Z | CyberBay 2025
+[2025-10-02 14:24:13] TZID conversion: 20251010T123000 TZID=America/New_York -> 2025-10-10 12:30 local
+[2025-10-02 14:24:13] Parsed event: 2025-10-10 12:30 | timed | TZID:America/New_York | Cyber Ranges x Gavin Judd bi-weekly updates
+[2025-10-02 14:24:13] UTC conversion: 20250923T130000Z -> UTC: 2025-09-23 13:00 -> Local: 2025-09-23 09:00
+[2025-10-02 14:24:13] Parsed event: 2025-09-23 09:00 | timed | UTC Z | Dr Awoniyi meet
+[2025-10-02 14:24:13] UTC conversion: 20250924T220000Z -> UTC: 2025-09-24 22:00 -> Local: 2025-09-24 18:00
+[2025-10-02 14:24:13] Parsed event: 2025-09-24 18:00 | timed | UTC Z | Meet w the guys
+[2025-10-02 14:24:13] TZID conversion: 20250825T100000 TZID=America/New_York -> 2025-08-25 10:00 local
+[2025-10-02 14:24:13] Parsed event: 2025-08-25 10:00 | timed | TZID:America/New_York | POS2112 L037
+[2025-10-02 14:24:13] TZID conversion: 20251001T100000 TZID=America/New_York -> 2025-10-01 10:00 local
+[2025-10-02 14:24:13] Parsed event: 2025-10-01 10:00 | timed | TZID:America/New_York | POS2112 L037 MAKE SURE TO ATTEND
+[2025-10-02 14:24:13] UTC conversion: 20251003T203000Z -> UTC: 2025-10-03 20:30 -> Local: 2025-10-03 16:30
+[2025-10-02 14:24:13] Parsed event: 2025-10-03 16:30 | timed | UTC Z | Andy K and Gavin Judd
+[2025-10-02 14:24:13] UTC conversion: 20251010T190000Z -> UTC: 2025-10-10 19:00 -> Local: 2025-10-10 15:00
+[2025-10-02 14:24:13] Parsed event: 2025-10-10 15:00 | timed | UTC Z | Cyber Gauntlet Meet
+[2025-10-02 14:24:13] VEVENTs found: 57 | Successfully parsed: 57 | Parse errors: 0
+[2025-10-02 14:24:13] Window(min): 2025-10-02 14:24 -> 2025-10-09 14:24 (Local TZ: Eastern Standard Time)
+[2025-10-02 14:24:13] IN  -> 2025-10-03 16:30 | timed | Andy K and Gavin Judd
+[2025-10-02 14:24:13] IN  (extended) -> 2025-10-10 12:30 | timed | Cyber Ranges x Gavin Judd bi-weekly updates
+[2025-10-02 14:24:13] IN  (extended) -> 2025-10-10 15:00 | timed | Cyber Gauntlet Meet
+[2025-10-02 14:24:13] IN  (extended) -> 2025-10-13 11:00 | timed | CyberBay 2025
+[2025-10-02 14:24:13] Hybrid summary: future=4 within=1 selected=4 extended=True effectiveEnd=2025-10-13 11:00
+[2025-10-02 14:24:13] Formatted 4 event(s) for display
+[2025-10-02 14:24:13] Wrote 4 line(s) to C:\Users\Gavin\Documents\Rainmeter\Skins\Sonder\@Resources\gcal_events.txt
+[2025-10-02 14:24:13] [DONE]
