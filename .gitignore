@@ -1,0 +1,25 @@
+# Secrets & runtime
+Sonder/@Resources/secrets.ini
+Sonder/@Resources/gcal_events.txt
+Sonder/@Resources/gcal_log.txt
+
+# Screens / exports
+screenshots/*.png
+*.psd
+*.ai
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+*.tmp
+*.bak
+~$*
+*.swp
+*.swo
+
+# Archives
+*.zip
+*.7z
+*.rar
