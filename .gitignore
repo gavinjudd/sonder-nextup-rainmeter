@@ -2,6 +2,7 @@
 Sonder/@Resources/secrets.ini
 Sonder/@Resources/gcal_events.txt
 Sonder/@Resources/gcal_log.txt
+sonder-nextup-rainmeter.zip
 
 # Screens / exports
 screenshots/*.png
@@ -12,6 +13,8 @@ screenshots/*.png
 .DS_Store
 Thumbs.db
 desktop.ini
+.idea/
+.vscode/
 *.log
 *.tmp
 *.bak

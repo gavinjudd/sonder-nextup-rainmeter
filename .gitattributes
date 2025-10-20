@@ -1,0 +1,9 @@
+* text=auto
+
+# Ensure Windows-friendly endings where needed
+*.ps1   eol=crlf
+*.ini   eol=crlf
+*.inc   eol=crlf
+*.txt   eol=crlf
+*.md    eol=crlf
+*.json  eol=crlf

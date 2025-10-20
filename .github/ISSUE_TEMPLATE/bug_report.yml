@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a problem with sonder-nextup-rainmeter
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Tell us what you expected vs. what you saw.
+      placeholder: Clear description, steps to reproduce, screenshots if helpful.
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version (Win+R → winver)
+      placeholder: 10/11 build
+  - type: input
+    id: pwsh
+    attributes:
+      label: PowerShell version
+      placeholder: Output of $PSVersionTable.PSVersion
+  - type: textarea
+    id: secrets
+    attributes:
+      label: Redacted secrets.ini keys
+      description: Paste only the keys you use (ICS_URLS, HIDE_*), NOT the actual URLs.
+      render: text
+  - type: textarea
+    id: logtail
+    attributes:
+      label: Tail of gcal_log.txt
+      description: Copy the last 40 lines after running the fetch.
+      render: text
+  - type: textarea
+    id: additional-info
