@@ -1,15 +1,15 @@
 # Local credentials and per-user configuration
-Sonder/@Resources/secrets.ini
-Sonder/@Resources/secrets.*.ini
-!Sonder/@Resources/secrets.example.ini
+overlay/@Resources/secrets.ini
+overlay/@Resources/secrets.*.ini
+!overlay/@Resources/secrets.example.ini
 
 # Calendar runtime and atomic-write scratch files
-Sonder/@Resources/gcal_events.txt
-Sonder/@Resources/gcal_log.txt
-Sonder/@Resources/gcal_tmp.ics
-Sonder/@Resources/gcal_tmp.txt
-Sonder/@Resources/.gcal_events.*.tmp
-Sonder/@Resources/.gcal_events.*.bak
+overlay/@Resources/gcal_events.txt
+overlay/@Resources/gcal_log.txt
+overlay/@Resources/gcal_tmp.ics
+overlay/@Resources/gcal_tmp.txt
+overlay/@Resources/.gcal_events.*.tmp
+overlay/@Resources/.gcal_events.*.bak
 sonder-nextup-rainmeter.zip
 
 # Private screenshots / design exports

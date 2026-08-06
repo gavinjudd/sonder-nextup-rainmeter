@@ -29,8 +29,11 @@ body:
   - type: textarea
     id: logtail
     attributes:
-      label: Tail of gcal_log.txt
-      description: Copy the last 40 lines after running the fetch.
+      label: Sanitized diagnostic metadata
+      description: Optional. Review locally and remove all event titles, UIDs, people, emails, meeting links, phone numbers, local paths, and URLs before pasting.
       render: text
   - type: textarea
     id: additional-info
+    attributes:
+      label: Anything else?
+      description: Add any other sanitized context that may help reproduce the problem.

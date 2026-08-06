@@ -1,23 +1,36 @@
 # Contributing
 
-Thanks for helping improve **sonder-nextup-rainmeter**!
+Thanks for improving Sonder Next Up.
 
-## How to contribute
-1. **Fork** the repo and create a feature branch: `feat/short-name`.
-2. Make changes and run the fetch once locally to verify `gcal_events.txt` and `gcal_log.txt` look right.
-3. **Do not** commit `secrets.ini`, `gcal_events.txt`, or `gcal_log.txt`.
-4. Open a **pull request** with a clear summary of changes + screenshots if UI is affected.
+## Before opening a pull request
 
-## Good PRs include
-- What the change does and why.
-- Before/after screenshots if visuals are touched.
-- A short tail of `gcal_log.txt` to confirm parsing/selection.
+1. Create a focused branch from `main`.
+2. Keep PowerShell compatible with Windows PowerShell 5.1.
+3. Run:
 
-## Code style
-- PowerShell 5.1 compatible.
-- Keep the script side-effect free outside `Sonder/@Resources/`.
-- Log helpful, concise lines to `gcal_log.txt`.
+   ```powershell
+   .\Tests\validate_repo.ps1
+   .\Tests\test_fetcher.ps1
+   .\Scripts\pack.ps1
+   ```
 
-## Security / privacy
-- Never post private ICS URLs.
-- Redact personal details from logs before attaching.
+4. Include a synthetic before/after preview for visual changes.
+5. Explain the user impact and any parser edge case covered.
+
+## Privacy rules
+
+Never commit or paste:
+
+- `secrets.ini` or a real ICS URL;
+- fetched `.ics` content;
+- `gcal_events.txt` or `gcal_log.txt`;
+- event titles, descriptions, attendees, meeting links, UIDs, locations, or phone numbers; or
+- screenshots containing a real calendar.
+
+Use `example.invalid`, synthetic names, and generated dates in tests. If a diagnostic log is necessary, inspect and redact it locally before attaching it.
+
+## Scope
+
+This repository is an overlay. Do not add fonts, binaries, images, plugins, or unrelated modules from the full Sonder distribution. See [NOTICE.md](NOTICE.md).
+
+Preserve the attribution, change notice, and CC BY-NC-SA 3.0 metadata in `overlay/Calendar/Calendar.ini`. New Clock, PowerShell, test, installer, and documentation contributions are accepted under the repository's MIT license.
