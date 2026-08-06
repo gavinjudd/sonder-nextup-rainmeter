@@ -1,11 +1,20 @@
-# Secrets & runtime
+# Local credentials and per-user configuration
 Sonder/@Resources/secrets.ini
+Sonder/@Resources/secrets.*.ini
+!Sonder/@Resources/secrets.example.ini
+
+# Calendar runtime and atomic-write scratch files
 Sonder/@Resources/gcal_events.txt
 Sonder/@Resources/gcal_log.txt
+Sonder/@Resources/gcal_tmp.ics
+Sonder/@Resources/gcal_tmp.txt
+Sonder/@Resources/.gcal_events.*.tmp
+Sonder/@Resources/.gcal_events.*.bak
 sonder-nextup-rainmeter.zip
 
-# Screens / exports
-screenshots/*.png
+# Private screenshots / design exports
+screenshots/private-*
+screenshots/local-*
 *.psd
 *.ai
 
