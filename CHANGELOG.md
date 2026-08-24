@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Recurring instances removed with `EXDATE` no longer remain in the desktop agenda.
+- Each exclusion now keeps its own timezone/value parameters and is compared with a normalized recurrence key.
+- Recurrence date construction no longer inherits nondeterministic fractional seconds from the current clock.
+
+### Tests
+
+- Added offline regressions for excluded, cancelled, and moved recurring instances.
+
 ## v2.0.0 — 2026-08-06
 
 ### Added
