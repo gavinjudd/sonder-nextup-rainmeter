@@ -7,6 +7,7 @@
 - Recurring instances removed with `EXDATE` no longer remain in the desktop agenda.
 - Each exclusion now keeps its own timezone/value parameters and is compared with a normalized recurrence key.
 - Recurrence date construction no longer inherits nondeterministic fractional seconds from the current clock.
+- Weekly recurrence expansion now preserves `DTSTART` seconds so exclusions use identical timestamp precision.
 
 ### Tests
 

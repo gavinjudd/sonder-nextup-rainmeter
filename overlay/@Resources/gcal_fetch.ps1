@@ -349,7 +349,7 @@ function Expand-RRule {
         $base = $weekStart.AddDays($weeks * 7 * $interval)
         if ($until -and $base -gt $until) { break }
         foreach ($d in $days) {
-          $dt = $base.AddDays($d).AddHours($StartLocal.Hour).AddMinutes($StartLocal.Minute)
+          $dt = $base.AddDays($d).AddHours($StartLocal.Hour).AddMinutes($StartLocal.Minute).AddSeconds($StartLocal.Second)
           if ($until -and $dt -gt $until) { continue }
           if ($dt -ge $WindowEnd) { break }
           if ($dt -lt $StartLocal) { continue }
