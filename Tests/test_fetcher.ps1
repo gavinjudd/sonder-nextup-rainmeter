@@ -139,7 +139,8 @@ exit $LASTEXITCODE
     # series TZID. A later weekly instance with non-zero seconds must disappear
     # on a successful refresh.
     $recurrenceUtc = [DateTime]::UtcNow.AddHours(2)
-    $recurrenceUtc = $recurrenceUtc.AddTicks(-($recurrenceUtc.Ticks % [TimeSpan]::TicksPerSecond)).AddSeconds(37)
+    $recurrenceUtc = $recurrenceUtc.AddTicks(-($recurrenceUtc.Ticks % [TimeSpan]::TicksPerMinute)).AddSeconds(37)
+    if ($recurrenceUtc.Second -ne 37 -or $recurrenceUtc.Millisecond -ne 0) { throw 'Recurrence fixture did not use deterministic second precision.' }
     $eastern = [TimeZoneInfo]::FindSystemTimeZoneById('Eastern Standard Time')
     $recurrenceEastern = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::SpecifyKind($recurrenceUtc, [DateTimeKind]::Utc), $eastern)
     $seriesStartEastern = $recurrenceEastern.AddDays(-7)
