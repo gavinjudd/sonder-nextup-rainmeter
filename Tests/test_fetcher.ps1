@@ -136,18 +136,20 @@ exit $LASTEXITCODE
     Write-Host 'Offline multi-feed chronology test passed.' -ForegroundColor Green
 
     # Regression: Google exports a deleted occurrence as an EXDATE using the
-    # series TZID. It must disappear on a successful refresh.
+    # series TZID. A later weekly instance with non-zero seconds must disappear
+    # on a successful refresh.
     $recurrenceUtc = [DateTime]::UtcNow.AddHours(2)
-    $recurrenceUtc = $recurrenceUtc.AddTicks(-($recurrenceUtc.Ticks % [TimeSpan]::TicksPerSecond))
+    $recurrenceUtc = $recurrenceUtc.AddTicks(-($recurrenceUtc.Ticks % [TimeSpan]::TicksPerSecond)).AddSeconds(37)
     $eastern = [TimeZoneInfo]::FindSystemTimeZoneById('Eastern Standard Time')
     $recurrenceEastern = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::SpecifyKind($recurrenceUtc, [DateTimeKind]::Utc), $eastern)
+    $seriesStartEastern = $recurrenceEastern.AddDays(-7)
     $easternStamp = $recurrenceEastern.ToString('yyyyMMddTHHmmss')
     $excludedTitle = 'Weekly exclusion regression'
     $excludedMaster = @"
 BEGIN:VEVENT
 UID:weekly-exdate@example.invalid
-DTSTART;TZID=America/New_York:$easternStamp
-DTEND;TZID=America/New_York:$($recurrenceEastern.AddMinutes(30).ToString('yyyyMMddTHHmmss'))
+DTSTART;TZID=America/New_York:$($seriesStartEastern.ToString('yyyyMMddTHHmmss'))
+DTEND;TZID=America/New_York:$($seriesStartEastern.AddMinutes(30).ToString('yyyyMMddTHHmmss'))
 RRULE:FREQ=WEEKLY;COUNT=4
 EXDATE;TZID=America/New_York:$easternStamp
 SUMMARY:$excludedTitle
