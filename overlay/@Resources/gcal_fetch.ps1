@@ -120,7 +120,7 @@ function Parse-IcsDateTime {
     try {
       $d = [datetime]::ParseExact($RawValue, 'yyyyMMdd', $null)
       # midnight local
-      $result.Start    = Get-Date -Year $d.Year -Month $d.Month -Day $d.Day -Hour 0 -Minute 0 -Second 0
+      $result.Start    = Get-Date -Year $d.Year -Month $d.Month -Day $d.Day -Hour 0 -Minute 0 -Second 0 -Millisecond 0
       $result.IsAllDay = $true
       $result.Ok       = $true
       $result.Reason   = 'all-day'
@@ -221,6 +221,19 @@ function Parse-IcsDateTime {
   }
 }
 
+function Get-RecurrenceKey {
+  param(
+    [datetime]$Value,
+    [bool]$IsAllDay = $false
+  )
+
+  if ($IsAllDay) {
+    return 'D|' + $Value.Date.ToString('yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
+  }
+
+  return 'T|' + $Value.ToUniversalTime().Ticks.ToString([Globalization.CultureInfo]::InvariantCulture)
+}
+
 # --- RRULE expansion (DAILY / WEEKLY / YEARLY with BYDAY / INTERVAL / UNTIL / COUNT / EXDATE) ---
 function Expand-RRule {
   param(
@@ -228,7 +241,7 @@ function Expand-RRule {
     [string]  $RRule,
     [datetime]$WindowStart,
     [datetime]$WindowEnd,
-    [string[]]$ExDates,
+    [object[]]$ExDates,
     [bool]    $IsAllDay = $false
   )
 
@@ -280,34 +293,32 @@ function Expand-RRule {
   $count = $null
   if ($map.ContainsKey('COUNT')) { $count = [int]$map['COUNT'] }
 
-  # Build EXDATE set (local times)
+  # Build EXDATE set using the same normalized keys as generated occurrences.
+  # Each exclusion retains its own VALUE/TZID parameters from the ICS property.
   $ex = @{}
   foreach ($exraw in ($ExDates | Where-Object { $_ })) {
-    foreach ($part in ($exraw -split ',')) {
+    $exValue = $exraw
+    $exParams = @{}
+    if ($exraw -isnot [string] -and $exraw.PSObject.Properties['Value']) {
+      $exValue = $exraw.Value
+      if ($exraw.PSObject.Properties['Params'] -and $exraw.Params) { $exParams = $exraw.Params }
+    }
+
+    foreach ($part in (($exValue + '') -split ',')) {
       $t = $part.Trim()
       if (-not $t) { continue }
       try {
-        if ($t -match 'Z$') {
-          if ($t.Length -eq 16) { $fmt = 'yyyyMMddTHHmmss' } else { $fmt = 'yyyyMMddTHHmm' }
-          $rawUtc = [datetime]::ParseExact($t.Substring(0, $t.Length - 1), $fmt, [Globalization.CultureInfo]::InvariantCulture)
-          $utc = [datetime]::SpecifyKind($rawUtc, [DateTimeKind]::Utc)
-          $ld  = [TimeZoneInfo]::ConvertTimeFromUtc($utc, [TimeZoneInfo]::Local)
-        } else {
-          if     ($t.Length -eq 15) { $fmt = 'yyyyMMddTHHmmss' }
-          elseif ($t.Length -eq 8)  { $fmt = 'yyyyMMdd' }
-          else                       { $fmt = 'yyyyMMddTHHmm' }
-          $ld  = [datetime]::ParseExact($t, $fmt, $null)
+        $parsedExDate = Parse-IcsDateTime -RawValue $t -Params $exParams
+        if ($parsedExDate.Ok -and $parsedExDate.Start) {
+          $ex[(Get-RecurrenceKey -Value $parsedExDate.Start -IsAllDay $IsAllDay)] = $true
         }
-        if ($IsAllDay) { $h = 0; $m = 0 } else { $h = $StartLocal.Hour; $m = $StartLocal.Minute }
-        $key = (Get-Date -Year $ld.Year -Month $ld.Month -Day $ld.Day -Hour $h -Minute $m -Second 0).ToString('o')
-        $ex[$key] = $true
       } catch { }
     }
   }
 
   function Add-If-In-Window([datetime]$dt) {
     if ($dt -ge $WindowStart -and $dt -lt $WindowEnd) {
-      $k = $dt.ToString('o')
+      $k = Get-RecurrenceKey -Value $dt -IsAllDay $IsAllDay
       if (-not $ex.ContainsKey($k)) { [void]$occ.Add($dt) }
     }
   }
@@ -351,7 +362,7 @@ function Expand-RRule {
       }
     }
     'MONTHLY' {
-      $monthCursor = Get-Date -Year $StartLocal.Year -Month $StartLocal.Month -Day 1 -Hour 0 -Minute 0 -Second 0
+      $monthCursor = Get-Date -Year $StartLocal.Year -Month $StartLocal.Month -Day 1 -Hour 0 -Minute 0 -Second 0 -Millisecond 0
       $generated = 0
       $done = $false
       $mapDow = @{ 'SU'=0; 'MO'=1; 'TU'=2; 'WE'=3; 'TH'=4; 'FR'=5; 'SA'=6 }
@@ -366,7 +377,7 @@ function Expand-RRule {
             if (-not [int]::TryParse($rawDay.Trim(), [ref]$monthDay) -or $monthDay -eq 0) { continue }
             if ($monthDay -lt 0) { $monthDay = $daysInMonth + $monthDay + 1 }
             if ($monthDay -lt 1 -or $monthDay -gt $daysInMonth) { continue }
-            $candidate = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $monthDay -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second
+            $candidate = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $monthDay -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second -Millisecond 0
             [void]$candidates.Add($candidate)
           }
         } elseif ($byday.Count -gt 0) {
@@ -378,26 +389,26 @@ function Expand-RRule {
             if ($ordinalText) {
               $ordinal = [int]$ordinalText
               if ($ordinal -gt 0) {
-                $first = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day 1 -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second
+                $first = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day 1 -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second -Millisecond 0
                 $offset = ($targetDow - [int]$first.DayOfWeek + 7) % 7
                 $monthDay = 1 + $offset + (($ordinal - 1) * 7)
               } else {
-                $last = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $daysInMonth -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second
+                $last = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $daysInMonth -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second -Millisecond 0
                 $offset = ([int]$last.DayOfWeek - $targetDow + 7) % 7
                 $monthDay = $daysInMonth - $offset + (($ordinal + 1) * 7)
               }
               if ($monthDay -ge 1 -and $monthDay -le $daysInMonth) {
-                [void]$candidates.Add((Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $monthDay -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second))
+                [void]$candidates.Add((Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $monthDay -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second -Millisecond 0))
               }
             } else {
               for ($monthDay = 1; $monthDay -le $daysInMonth; $monthDay++) {
-                $candidate = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $monthDay -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second
+                $candidate = Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $monthDay -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second -Millisecond 0
                 if ([int]$candidate.DayOfWeek -eq $targetDow) { [void]$candidates.Add($candidate) }
               }
             }
           }
         } elseif ($StartLocal.Day -le $daysInMonth) {
-          [void]$candidates.Add((Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $StartLocal.Day -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second))
+          [void]$candidates.Add((Get-Date -Year $monthCursor.Year -Month $monthCursor.Month -Day $StartLocal.Day -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second -Millisecond 0))
         }
 
         foreach ($dt in @($candidates | Sort-Object -Unique)) {
@@ -417,7 +428,7 @@ function Expand-RRule {
       while ($year -le $WindowEnd.Year) {
         $dt = $null
         try {
-          $dt = Get-Date -Year $year -Month $StartLocal.Month -Day $StartLocal.Day -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second
+          $dt = Get-Date -Year $year -Month $StartLocal.Month -Day $StartLocal.Day -Hour $StartLocal.Hour -Minute $StartLocal.Minute -Second $StartLocal.Second -Millisecond 0
         } catch {
           # Invalid dates such as Feb 29 in a non-leap year are skipped.
         }
@@ -643,7 +654,11 @@ foreach ($line in $lines) {
             $rrule   = if ($current.ContainsKey('RRULE'))    { $current['RRULE']    } else { $null }
             $status  = if ($current.ContainsKey('STATUS'))   { ($current['STATUS'] + '').ToUpperInvariant() } else { $null }
             $exArr   = @()
-            if ($current.ContainsKey('EXDATE')) { $exArr = $current['EXDATE'].Split(',') }
+            if ($current.ContainsKey('EXDATE_ITEMS')) {
+                $exArr = @($current['EXDATE_ITEMS'])
+            } elseif ($current.ContainsKey('EXDATE')) {
+                $exArr = $current['EXDATE'].Split(',')
+            }
 
             # Master DTSTART for either single event or base of recurrence
             $parsed = Parse-IcsDateTime -RawValue $current['DTSTART'] -Params $dtParams
@@ -683,7 +698,7 @@ foreach ($line in $lines) {
                 } else {
                     $HH = 0; $mm = 0; $ss = 0
                 }
-                $ridLocalForDay = Get-Date -Year $yyyy -Month $MM -Day $dd -Hour $HH -Minute $mm -Second $ss
+                $ridLocalForDay = Get-Date -Year $yyyy -Month $MM -Day $dd -Hour $HH -Minute $mm -Second $ss -Millisecond 0
                 $origKeys += ($uid + '|' + $ridLocalForDay.ToUniversalTime().ToString('o'))
             }
         }
@@ -854,20 +869,27 @@ if ($summary) {
             $paramStr = ($segments[1..($segments.Count-1)] -join ';')
         }
 
-        # Accumulate EXDATE (don’t overwrite)
-        if ($propName -eq 'EXDATE') {
-            if ($current.ContainsKey('EXDATE')) { $current['EXDATE'] = $current['EXDATE'] + ',' + $propValue } else { $current['EXDATE'] = $propValue }
-        } else {
-            $current[$propName] = $propValue
-        }
-
         # Params into a map (e.g., TZID, VALUE=DATE)
+        $pmap = @{}
         if ($paramStr) {
-            $pmap = @{}
             foreach ($p in $paramStr.Split(';')) {
                 $kv = $p.Split('=',2)
                 if ($kv.Length -eq 2) { $pmap[$kv[0].ToUpper()] = $kv[1] }
             }
+        }
+
+        # EXDATE may occur more than once and each property can use different
+        # VALUE/TZID parameters, so preserve the entries independently.
+        if ($propName -eq 'EXDATE') {
+            if (-not $current.ContainsKey('EXDATE_ITEMS')) {
+                $current['EXDATE_ITEMS'] = New-Object System.Collections.ArrayList
+            }
+            [void]$current['EXDATE_ITEMS'].Add([pscustomobject]@{
+                Value  = $propValue
+                Params = $pmap
+            })
+        } else {
+            $current[$propName] = $propValue
             if ($pmap.Count -gt 0) { $current["${propName}_PARAMS"] = $pmap }
         }
     }

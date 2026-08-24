@@ -32,6 +32,29 @@ function New-Calendar {
         ($Events -join "`r`n") + "`r`nEND:VCALENDAR`r`n"
 }
 
+function ConvertTo-IcsUtc {
+    param([DateTime]$Value)
+    $Value.ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
+}
+
+function New-RecurringMaster {
+    param(
+        [string]$Uid,
+        [DateTime]$StartUtc,
+        [string]$Summary
+    )
+
+    @"
+BEGIN:VEVENT
+UID:$Uid@example.invalid
+DTSTART:$(ConvertTo-IcsUtc $StartUtc)
+DTEND:$(ConvertTo-IcsUtc $StartUtc.AddMinutes(30))
+RRULE:FREQ=WEEKLY;COUNT=4
+SUMMARY:$Summary
+END:VEVENT
+"@
+}
+
 try {
     Copy-Item -LiteralPath (Join-Path $repoRoot 'overlay\@Resources\gcal_fetch.ps1') -Destination $tempRoot
 
@@ -71,6 +94,27 @@ exit $LASTEXITCODE
     [IO.File]::WriteAllText((Join-Path $tempRoot 'harness.ps1'), $harness, (New-Object Text.UTF8Encoding($false)))
 
     $powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+
+    function Invoke-PrimaryFixture {
+        param(
+            [string[]]$Events,
+            [string[]]$SensitiveValues = @()
+        )
+
+        [IO.File]::WriteAllText((Join-Path $tempRoot 'primary.ics'), (New-Calendar $Events), (New-Object Text.UTF8Encoding($false)))
+        [IO.File]::WriteAllText((Join-Path $tempRoot 'secrets.ini'), "ICS_URL=https://example.invalid/primary.ics`r`n", (New-Object Text.UTF8Encoding($false)))
+
+        $fixtureOutput = @(& $powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $tempRoot 'harness.ps1') 2>&1)
+        if ($LASTEXITCODE -ne 0) { throw "Fetcher recurrence fixture failed: $($fixtureOutput -join ' ')" }
+
+        $fixtureLog = [IO.File]::ReadAllText((Join-Path $tempRoot 'gcal_log.txt'))
+        foreach ($privateValue in @('example.invalid', $tempRoot) + $SensitiveValues) {
+            if ($fixtureLog.Contains($privateValue)) { throw 'Fetcher recurrence log exposed a fixture URL, title, or local path.' }
+        }
+
+        return @([IO.File]::ReadAllLines((Join-Path $tempRoot 'gcal_events.txt'), [Text.Encoding]::Unicode))
+    }
+
     $testOutput = @(& $powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $tempRoot 'harness.ps1') 2>&1)
     if ($LASTEXITCODE -ne 0) { throw "Fetcher fixture run failed: $($testOutput -join ' ')" }
 
@@ -90,6 +134,87 @@ exit $LASTEXITCODE
     }
 
     Write-Host 'Offline multi-feed chronology test passed.' -ForegroundColor Green
+
+    # Regression: Google exports a deleted occurrence as an EXDATE using the
+    # series TZID. It must disappear on a successful refresh.
+    $recurrenceUtc = [DateTime]::UtcNow.AddHours(2)
+    $recurrenceUtc = $recurrenceUtc.AddTicks(-($recurrenceUtc.Ticks % [TimeSpan]::TicksPerSecond))
+    $eastern = [TimeZoneInfo]::FindSystemTimeZoneById('Eastern Standard Time')
+    $recurrenceEastern = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::SpecifyKind($recurrenceUtc, [DateTimeKind]::Utc), $eastern)
+    $easternStamp = $recurrenceEastern.ToString('yyyyMMddTHHmmss')
+    $excludedTitle = 'Weekly exclusion regression'
+    $excludedMaster = @"
+BEGIN:VEVENT
+UID:weekly-exdate@example.invalid
+DTSTART;TZID=America/New_York:$easternStamp
+DTEND;TZID=America/New_York:$($recurrenceEastern.AddMinutes(30).ToString('yyyyMMddTHHmmss'))
+RRULE:FREQ=WEEKLY;COUNT=4
+EXDATE;TZID=America/New_York:$easternStamp
+SUMMARY:$excludedTitle
+END:VEVENT
+"@
+    $exdateLines = @(Invoke-PrimaryFixture -Events @(
+        $excludedMaster,
+        (New-IcsEvent 'exdate-sentinel' $recurrenceUtc.AddHours(1) 'EXDATE sentinel')
+    ) -SensitiveValues @($excludedTitle, 'EXDATE sentinel'))
+    if (@($exdateLines | Where-Object { $_ -match [regex]::Escape($excludedTitle) }).Count -ne 0) {
+        throw 'EXDATE failed to suppress the deleted recurring occurrence.'
+    }
+    if (@($exdateLines | Where-Object { $_ -match 'EXDATE sentinel' }).Count -ne 1) {
+        throw 'EXDATE fixture did not write a fresh replacement output.'
+    }
+    Write-Host 'Recurring EXDATE deletion test passed.' -ForegroundColor Green
+
+    # A STATUS:CANCELLED exception must suppress its original recurrence even
+    # when the master appears first in the feed.
+    $cancelTitle = 'Cancelled recurrence regression'
+    $cancelMaster = New-RecurringMaster 'weekly-cancel' $recurrenceUtc $cancelTitle
+    $cancelOverride = @"
+BEGIN:VEVENT
+UID:weekly-cancel@example.invalid
+RECURRENCE-ID:$(ConvertTo-IcsUtc $recurrenceUtc)
+DTSTART:$(ConvertTo-IcsUtc $recurrenceUtc)
+STATUS:CANCELLED
+SEQUENCE:1
+SUMMARY:$cancelTitle
+END:VEVENT
+"@
+    $cancelLines = @(Invoke-PrimaryFixture -Events @(
+        $cancelMaster,
+        $cancelOverride,
+        (New-IcsEvent 'cancel-sentinel' $recurrenceUtc.AddHours(1) 'Cancel sentinel')
+    ) -SensitiveValues @($cancelTitle, 'Cancel sentinel'))
+    if (@($cancelLines | Where-Object { $_ -match [regex]::Escape($cancelTitle) }).Count -ne 0) {
+        throw 'STATUS:CANCELLED failed to suppress the recurring occurrence.'
+    }
+    Write-Host 'Recurring cancellation test passed.' -ForegroundColor Green
+
+    # A moved exception replaces the original slot exactly once.
+    $movedTitle = 'Moved recurrence regression'
+    $movedUtc = $recurrenceUtc.AddHours(3)
+    $movedMaster = New-RecurringMaster 'weekly-move' $recurrenceUtc $movedTitle
+    $movedOverride = @"
+BEGIN:VEVENT
+UID:weekly-move@example.invalid
+RECURRENCE-ID:$(ConvertTo-IcsUtc $recurrenceUtc)
+DTSTART:$(ConvertTo-IcsUtc $movedUtc)
+DTEND:$(ConvertTo-IcsUtc $movedUtc.AddMinutes(30))
+STATUS:CONFIRMED
+SEQUENCE:1
+SUMMARY:$movedTitle
+END:VEVENT
+"@
+    $movedLines = @(Invoke-PrimaryFixture -Events @($movedMaster, $movedOverride) -SensitiveValues @($movedTitle))
+    $movedMatches = @($movedLines | Where-Object { $_ -match [regex]::Escape($movedTitle) })
+    if ($movedMatches.Count -ne 1) { throw "Expected one moved occurrence; got $($movedMatches.Count)." }
+    $movedPrefix = $movedUtc.ToLocalTime().ToString('ddd M/d') + " $([char]0x2022) " + $movedUtc.ToLocalTime().ToString('h:mm tt')
+    if ($movedMatches[0] -notlike "$movedPrefix*") {
+        throw "Moved occurrence did not use the replacement start time. Expected prefix '$movedPrefix'; got '$($movedMatches[0])'."
+    }
+    Write-Host 'Moved recurrence test passed.' -ForegroundColor Green
+
+    # Restore the two-source configuration used by the failure-preservation test.
+    [IO.File]::WriteAllText((Join-Path $tempRoot 'secrets.ini'), "ICS_URLS=https://example.invalid/primary.ics;https://example.invalid/secondary.ics`r`n", (New-Object Text.UTF8Encoding($false)))
 
     $lastKnownGood = 'Last known good fixture output'
     [IO.File]::WriteAllText((Join-Path $tempRoot 'gcal_events.txt'), $lastKnownGood, [Text.Encoding]::Unicode)
